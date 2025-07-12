@@ -1,0 +1,39 @@
+import Request from "./request";
+
+export default function Content() {
+  return (
+    <div className="p-4 h-full w-full flex flex-col overflow-hidden">
+      {/* Top */}
+      <div className="border-b pb-2 border-gray-300">
+        <span className="text-green-600 text-xl font-semibold">
+          Admin Panel
+        </span>
+      </div>
+      {/* Center */}
+      <div className="h-full w-full p-4 flex gap-8">
+        <div className="w-1/2 border border-gray-300 rounded shadow-md p-4 flex flex-col">
+          <div className="text-green-600 font-semibold text-lg border-b border-gray-300 pb-2">
+            Client Requests
+          </div>
+          <div className="my-2 h-full gap-4 flex flex-col overflow-y-auto overflow-x-hidden">
+            {/* Request Component */}
+            <Request className="shadow-md" radioName="requestGroup"/>
+            <Request className="shadow-md" radioName="requestGroup"/>
+            <Request className="shadow-md" radioName="requestGroup"/>
+            <Request className="shadow-md" radioName="requestGroup"/>
+            <Request className="shadow-md" radioName="requestGroup"/>
+            <Request className="shadow-md" radioName="requestGroup"/>
+          </div>
+        </div>
+        <div className="w-1/2 border border-gray-300 rounded shadow-md p-4 flex flex-col overflow-y-auto overflow-x-hidden">
+          <div className="text-green-600 font-semibold text-lg border-b border-gray-300 pb-2">
+            Send Response
+          </div>
+          <div className="my-2 h-full">
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
