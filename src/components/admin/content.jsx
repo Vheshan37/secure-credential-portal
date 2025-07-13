@@ -1,7 +1,7 @@
 import Request from "./request";
 import ResponseForm from "./responseForm";
 
-export default function Content() {
+export default function Content({requestToggler, historyToggler}) {
   return (
     <div className="p-4 h-full w-full flex flex-col overflow-hidden">
       {/* Top */}
@@ -18,12 +18,12 @@ export default function Content() {
           </div>
           <div className="my-2 h-full gap-4 flex flex-col overflow-y-auto overflow-x-hidden">
             {/* Request Component */}
-            <Request className="shadow-md" radioName="requestGroup"/>
-            <Request className="shadow-md" radioName="requestGroup"/>
-            <Request className="shadow-md" radioName="requestGroup"/>
-            <Request className="shadow-md" radioName="requestGroup"/>
-            <Request className="shadow-md" radioName="requestGroup"/>
-            <Request className="shadow-md" radioName="requestGroup"/>
+            <Request className="shadow-md" radioName="requestGroup" requestToggler={requestToggler} historyToggler={historyToggler}/>
+            <Request className="shadow-md" radioName="requestGroup" requestToggler={requestToggler} historyToggler={historyToggler}/>
+            <Request className="shadow-md" radioName="requestGroup" requestToggler={requestToggler} historyToggler={historyToggler}/>
+            <Request className="shadow-md" radioName="requestGroup" requestToggler={requestToggler} historyToggler={historyToggler}/>
+            <Request className="shadow-md" radioName="requestGroup" requestToggler={requestToggler} historyToggler={historyToggler}/>
+            <Request className="shadow-md" radioName="requestGroup" requestToggler={requestToggler} historyToggler={historyToggler}/>
           </div>
         </div>
         <div className="w-1/3 border border-gray-300 rounded shadow-md p-4 flex flex-col">

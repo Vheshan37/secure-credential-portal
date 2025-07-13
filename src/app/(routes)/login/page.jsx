@@ -4,11 +4,17 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import Admin from "../admin/page";
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { login } from "@/actions/auth";
+import GuestLogin from "@/components/guestLogin";
 
 export default function Login() {
   const [state, action, isPending] = useActionState(login, undefined);
+  const [isGuestOpen, setIsGuestOpen] = useState(false);
+
+  const toggleGuestPopup = () => {
+    setIsGuestOpen(!isGuestOpen);
+  };
 
   useGSAP(() => {
     gsap.to("#img", {
@@ -22,6 +28,10 @@ export default function Login() {
   return (
     <>
       <div className="h-screen w-screen bg-blue-50 relative overflow-hidden flex justify-center items-center">
+        {/* Guest login popup */}
+        {isGuestOpen && <GuestLogin onClose={toggleGuestPopup}/>}
+        {/* Guest login popup */}
+
         <img
           src="/images/background.png"
           alt="Image"
@@ -32,7 +42,10 @@ export default function Login() {
         {/* Login form */}
 
         {/* Glassmorphic form container */}
-        <form action={action} className="relative z-10 w-full max-w-sm p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/40 shadow-lg">
+        <form
+          action={action}
+          className="relative z-10 w-full max-w-sm p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/40 shadow-lg"
+        >
           <h1 className="text-2xl font-bold text-center text-green-600 mb-4">
             Secure Credential Portal
           </h1>
@@ -96,14 +109,15 @@ export default function Login() {
 
           <div className="flex gap-4">
             <button
+              onClick={toggleGuestPopup}
               type="button"
-              className="w-full border border-blue-500 text-blue-500 py-2 rounded-lg hover:bg-blue-50"
+              className="w-full border border-blue-500 text-blue-500 py-2 rounded-lg hover:bg-blue-700 hover:border-blue-700 hover:text-white cursor-pointer"
             >
               Login as a guest
             </button>
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700  cursor-pointer"
             >
               Login
             </button>

@@ -4,7 +4,7 @@ import {
   AiOutlineInfoCircle,
 } from "react-icons/ai";
 
-export default function Request({ className, radioName }) {
+export default function Request({ className, radioName, icon, isFull , requestToggler, historyToggler}) {
   return (
     <div
       className={`flex gap-2 bg-blue-50 rounded border-l-[2px] border-blue-600 text-gray-600 items-stretch p-2 ${className}`}
@@ -18,20 +18,23 @@ export default function Request({ className, radioName }) {
       </div>
       <div className="w-full">
         <div className="flex justify-between border-b border-gray-300">
-          <span className="font-semibold">Circuit ID</span>
+          <div className="flex gap-2">
+            <span className="font-semibold">Circuit ID</span>
+            {icon}
+          </div>
           <div className="flex gap-2 items-center">
             <span className="text-xs">Date & Time</span>
-            <AiOutlineInfoCircle className="text-gray-300 hover:text-gray-600 cursor-pointer transition-all" />{" "}
+            <AiOutlineInfoCircle onClick={requestToggler} className="text-gray-300 hover:text-gray-600 cursor-pointer transition-all" />{" "}
           </div>
         </div>
         <div className="flex flex-col mt-1 gap-0.5">
-          <span className="text-sm">
+          <span className="text-sm cursor-pointer hover:text-gray-700 hover:font-semibold" onClick={historyToggler}>
             <span className="font-semibold">Email:</span> johndoe@gmail.com
           </span>
-          <span className="text-sm">
+          <span className="text-sm cursor-pointer hover:text-gray-700 hover:font-semibold">
             <span className="font-semibold">Mobile:</span> +94 71 989 2932
           </span>
-          <span className="text-sm text-justify line-clamp-2 ">
+          <span className={`text-sm cursor-pointer hover:text-gray-700 hover:font-semibold text-justify line-clamp-2 ${isFull && `line-clamp-none`}`}>
             <span className="font-semibold">Description:</span> Lorem ipsum
             dolor sit amet consectetur adipisicing elit. Fuga natus odio porro
             quos dolorem accusantium enim laborum rem error. Hic accusantium
