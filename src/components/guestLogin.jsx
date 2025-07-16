@@ -42,7 +42,7 @@ export default function GuestLogin({ onClose }) {
         className="bg-blue-50 rounded border border-gray-300 px-2 pt-2 pb-4 min-w-[350px]"
       >
         <div className="text-green-600 flex justify-between items-center border-b border-gray-300 pb-2 mb-4">
-          <span className="font-semibold text-lg">Login as a Guest</span>
+          <span className="font-semibold text-lg">Login as a User</span>
           <AiOutlineCloseSquare
             onClick={handleClose}
             size={24}
@@ -83,7 +83,7 @@ export default function GuestLogin({ onClose }) {
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
           >
-            Login as a guest
+            Login as a User
           </button>
         </div>
       </form>

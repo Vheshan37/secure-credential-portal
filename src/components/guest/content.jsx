@@ -13,6 +13,7 @@ export default function () {
           Guest Panel
         </span>
       </div>
+      
       {/* Center */}
       <div className="h-full w-full p-4 flex gap-6">
         <div className="w-2/3 border border-gray-300 rounded shadow-md p-4 flex flex-col">

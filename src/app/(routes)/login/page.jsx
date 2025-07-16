@@ -2,15 +2,13 @@
 
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
-import Admin from "../admin/page";
-import Link from "next/link";
-import { useActionState, useState } from "react";
-import { login } from "@/actions/auth";
+import { useState } from "react";
 import GuestLogin from "@/components/guestLogin";
 
 export default function Login() {
-  const [state, action, isPending] = useActionState(login, undefined);
   const [isGuestOpen, setIsGuestOpen] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const toggleGuestPopup = () => {
     setIsGuestOpen(!isGuestOpen);
@@ -25,11 +23,39 @@ export default function Login() {
       ease: "power1.inOut",
     });
   }, []);
+
+  // Handle the login process
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!username.trim() || !password.trim()) {
+      alert("Please enter both username and password");
+      return;
+    }
+
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+      credentials:"include"
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      window.location.href = "/admin";
+    } else {
+      alert(data.error);
+    }
+  };
+
   return (
     <>
       <div className="h-screen w-screen bg-blue-50 relative overflow-hidden flex justify-center items-center">
         {/* Guest login popup */}
-        {isGuestOpen && <GuestLogin onClose={toggleGuestPopup}/>}
+        {isGuestOpen && <GuestLogin onClose={toggleGuestPopup} />}
         {/* Guest login popup */}
 
         <img
@@ -43,7 +69,7 @@ export default function Login() {
 
         {/* Glassmorphic form container */}
         <form
-          action={action}
+          onSubmit={handleSubmit}
           className="relative z-10 w-full max-w-sm p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/40 shadow-lg"
         >
           <h1 className="text-2xl font-bold text-center text-green-600 mb-4">
@@ -65,6 +91,8 @@ export default function Login() {
             <input
               id="username"
               type="email"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               placeholder="johndoe@gmail.com"
               className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
             />
@@ -80,6 +108,8 @@ export default function Login() {
             <input
               id="password"
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="********"
               className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
             />
@@ -113,13 +143,13 @@ export default function Login() {
               type="button"
               className="w-full border border-blue-500 text-blue-500 py-2 rounded-lg hover:bg-blue-700 hover:border-blue-700 hover:text-white cursor-pointer"
             >
-              Login as a guest
+              Login as a User
             </button>
             <button
               type="submit"
               className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700  cursor-pointer"
             >
-              Login
+              Login as a Admin
             </button>
           </div>
         </form>

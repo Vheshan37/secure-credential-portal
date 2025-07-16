@@ -9,16 +9,8 @@ datasource db {
 
 model admin {
   id       Int    @id @default(autoincrement())
-  username String @db.VarChar(45)
+  username String @unique @db.VarChar(45)
   password String @db.VarChar(255)
-}
-
-model product {
-  circuit_no Int        @id
-  username   String     @db.VarChar(45)
-  password   String     @db.VarChar(255)
-  otp        String?    @db.VarChar(6)
-  response   response[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -55,17 +47,26 @@ model res_status {
 }
 
 model response {
-  id                 Int        @id @default(autoincrement())
-  product_circuit_no Int
-  used_time          DateTime   @db.DateTime(0)
-  exp_time           DateTime   @db.DateTime(0)
-  res_status_id      Int
-  request_id         Int
-  product            product    @relation(fields: [product_circuit_no], references: [circuit_no], onDelete: NoAction, onUpdate: NoAction, map: "fk_req_history_product1")
-  request            request    @relation(fields: [request_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_response_request1")
-  res_status         res_status @relation(fields: [res_status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_response_res_status1")
+  id            Int            @id @default(autoincrement())
+  used_time     DateTime       @db.DateTime(0)
+  exp_time      DateTime       @db.DateTime(0)
+  username      String         @db.VarChar(50)
+  password      String         @db.VarChar(255)
+  res_status_id Int
+  request_id    Int
+  request       request        @relation(fields: [request_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_response_request1")
+  res_status    res_status     @relation(fields: [res_status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_response_res_status1")
+  response_otp  response_otp[]
 
-  @@index([product_circuit_no], map: "fk_req_history_product1_idx")
   @@index([request_id], map: "fk_response_request1_idx")
   @@index([res_status_id], map: "fk_response_res_status1_idx")
+}
+
+model response_otp {
+  id          Int      @id @default(autoincrement())
+  otp         String   @db.VarChar(6)
+  response_id Int
+  response    response @relation(fields: [response_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_response_otp_response1")
+
+  @@index([response_id], map: "fk_response_otp_response1_idx")
 }

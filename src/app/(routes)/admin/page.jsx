@@ -1,36 +1,17 @@
-"use client";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import AdminClient from "@/components/admin/AdminClient";
 
-import RequestPopUp from "@/components/admin/requestPopup";
-import Content from "../../../components/admin/content";
-import SideBar from "../../../components/admin/sidebar";
-import RequestHistory from "@/components/admin/userRequestHistory";
-import { useState } from "react";
+export default async function AdminPage() {
+  const cookieStore = cookies();
+  const token = (await cookieStore).get("token")?.value;
 
-export default function Admin() {
-  const [isRequestPopUpOpen, setIsRequestPopUpOpen] = useState(false);
-  const [isRequestHistoryOpen, setIsRequestHistoryOpen] = useState(false);
+  const user = token ? verifyToken(token) : null;
 
-  const toggleRequestPopUp = () => {
-    setIsRequestPopUpOpen(!isRequestPopUpOpen);
-  };
+  if (!user) {
+    redirect("/login");
+  }
 
-  const toggleRequestHistory = () => {
-    setIsRequestHistoryOpen(!isRequestHistoryOpen);
-  };
-
-  return (
-    <>
-      <div className="w-screen h-screen flex bg-white overflow-hidden">
-        <SideBar className="bg-gradient-to-b from-blue-900 to-green-900 w-fit p-4 h-full flex flex-col justify-center items-center shadow-lg shadow-gray-500 max-w-[300px]" />
-        {/* Content */}
-        <Content requestToggler={toggleRequestPopUp} historyToggler={toggleRequestHistory}/>
-        {isRequestPopUpOpen && (
-          <RequestPopUp toggleComponent={toggleRequestPopUp} />
-        )}
-        {isRequestHistoryOpen && (
-          <RequestHistory toggleComponent={toggleRequestHistory} />
-        )}
-      </div>
-    </>
-  );
+  return <AdminClient />;
 }
