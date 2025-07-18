@@ -1,7 +1,6 @@
 "use client";
 
-import { sendResponse } from "@/actions/request";
-import { useActionState, useState } from "react";
+import { useState } from "react";
 import { MdBlock } from "react-icons/md";
 
 export default function () {
@@ -11,10 +10,8 @@ export default function () {
     setReject((prev) => !prev);
   };
 
-  const [state, action, isPending] = useActionState(sendResponse, undefined);
-
   return (
-    <form action={action} className="flex gap-4 flex-col">
+    <form className="flex gap-4 flex-col">
       <div className="flex items-center gap-2 text-red-600 justify-end px-2">
         <label
           htmlFor=""
@@ -92,7 +89,7 @@ export default function () {
 
       {/* Submit button */}
       <button
-        type="submit"
+        type="button"
         className="mt-2 inline-block bg-blue-600 text-white font-medium px-4 py-2 rounded hover:bg-blue-700 transition"
       >
         Send

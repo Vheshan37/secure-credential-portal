@@ -1,11 +1,38 @@
-import { guestLogin } from "@/actions/auth";
+"use client"
+
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { useActionState, useRef } from "react";
+import { useRef, useState } from "react";
 import { AiOutlineCloseSquare } from "react-icons/ai";
 
 export default function GuestLogin({ onClose }) {
   const formRef = useRef();
+  const [email, setEmail] = useState("");
+  const [circuitId, setCircuitId] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const res = await fetch("/api/guestLogin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, circuitId }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      if (data.redirect) {
+        // alert(data.redirect);
+        window.location.href = data.redirect;
+      } else {
+        alert("OTP sent! Please check your email to verify.");
+        // TODO: Redirect to an OTP verification page (/verify-otp)
+      }
+    } else {
+      alert(data.error || "Something went wrong.");
+    }
+  };
 
   useGSAP(() => {
     gsap.fromTo(
@@ -32,13 +59,11 @@ export default function GuestLogin({ onClose }) {
     });
   };
 
-  const [state, action, isPending] = useActionState(guestLogin, undefined);
-
   return (
     <div className="absolute z-20 w-full h-full bg-white/5 backdrop-blur-sm flex justify-center items-center">
       <form
+      onSubmit={handleSubmit}
         ref={formRef}
-        action={action}
         className="bg-blue-50 rounded border border-gray-300 px-2 pt-2 pb-4 min-w-[350px]"
       >
         <div className="text-green-600 flex justify-between items-center border-b border-gray-300 pb-2 mb-4">
@@ -56,8 +81,7 @@ export default function GuestLogin({ onClose }) {
           <input
             type="email"
             placeholder="johndoe@gmail.com"
-            name=""
-            id=""
+            onChange={(e)=>setEmail(e.target.value)}
             className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-text"
           />
         </div>
@@ -68,8 +92,7 @@ export default function GuestLogin({ onClose }) {
           <input
             type="text"
             placeholder="E10002345"
-            name=""
-            id=""
+            onChange={(e)=>setCircuitId(e.target.value)}
             className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
           />
         </div>

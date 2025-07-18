@@ -1,12 +1,18 @@
 "use client";
 
-import { sendRequest } from "@/actions/request";
-import { useActionState, useState } from "react";
-import { MdBlock } from "react-icons/md";
+import { useState } from "react";
 import EmailVerification from "./emailVerification";
 
-export default function () {
+export default function ({ user }) {
   const [isVerificationOpen, setIsVerificationOpen] = useState(false);
+
+  const [name, setName] = useState("");
+  const [designation, setDesignation] = useState("");
+  const [contact, setContact] = useState("");
+  const [circuitId, setCircuitId] = useState("");
+  const [company, setCompany] = useState("");
+  const [service, setService] = useState("");
+  const [description, setDescription] = useState("");
 
   const openVerification = () => {
     setIsVerificationOpen(true);
@@ -16,13 +22,94 @@ export default function () {
     setIsVerificationOpen(false);
   };
 
-  // The action to run in the popup:
-  const [state, action, isPending] = useActionState(sendRequest, undefined);
+  const isInputsEntered = () => {
+    const errors = [];
+
+    if (name.trim() === "") errors.push("Name");
+    if (designation.trim() === "") errors.push("Designation");
+    if (contact.trim() === "") errors.push("Contact");
+    if (circuitId.trim() === "") errors.push("Circuit ID");
+    if (company.trim() === "") errors.push("Company");
+    if (service.trim() === "") errors.push("Service");
+    if (description.trim() === "") errors.push("Description");
+
+    if (errors.length > 0) {
+      alert(`The following fields cannot be empty:\n${errors.join(", ")}`);
+      return false;
+    }
+
+    return true;
+  };
+
+  const clearInputs = () => {
+    setName("");
+    setDesignation("");
+    setContact("");
+    setCircuitId("");
+    setCompany("");
+    setService("");
+    setDescription("");
+  };
+
+  const submitRequest = async () => {
+    const res = await fetch("/api/user/request/sendRequest", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: user.userId,
+        name,
+        designation,
+        contact,
+        company,
+        service,
+        description,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      if (data.success) {
+        alert(data.message);
+        clearInputs();
+        closeVerification();
+      } else {
+        alert(data.error);
+      }
+    } else {
+      alert(data.error);
+    }
+  };
+
+  const verifyAndSendMail = async () => {
+    if (isInputsEntered()) {
+      const response = await fetch(
+        `/api/user/request/sendEmail?id=${encodeURIComponent(user.userId)}`
+      );
+
+      const responseData = await response.json();
+
+      if (response.ok) {
+        if (responseData.success) {
+          alert(responseData.message);
+          openVerification();
+        } else {
+          alert(responseData.error);
+        }
+      } else {
+        alert(responseData.error);
+      }
+    }
+  };
 
   return (
     <>
       {isVerificationOpen && (
-        <EmailVerification onClose={closeVerification} action={action} />
+        <EmailVerification
+          onClose={closeVerification}
+          onAction={submitRequest}
+          user={user}
+        />
       )}
       <form className="flex gap-4 flex-col">
         <span className="text-gray-700 font-semibold border-b border-gray-300 pb-2">
@@ -36,8 +123,11 @@ export default function () {
             </label>
             <input
               type="text"
-              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-gray-900"
-              placeholder=""
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+              value={name}
+              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-gray-600"
             />
           </div>
           {/* Designation */}
@@ -47,8 +137,11 @@ export default function () {
             </label>
             <input
               type="text"
-              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-gray-900"
-              placeholder=""
+              value={designation}
+              onChange={(e) => {
+                setDesignation(e.target.value);
+              }}
+              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-gray-600"
             />
           </div>
         </div>
@@ -60,8 +153,9 @@ export default function () {
             </label>
             <input
               type="text"
-              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-gray-900"
-              placeholder=""
+              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-gray-600"
+              disabled
+              value={user.email}
             />
           </div>
           {/* Contact No */}
@@ -71,8 +165,11 @@ export default function () {
             </label>
             <input
               type="text"
-              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-gray-900"
-              placeholder=""
+              value={contact}
+              onChange={(e) => {
+                setContact(e.target.value);
+              }}
+              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-gray-600"
             />
           </div>
         </div>
@@ -87,8 +184,11 @@ export default function () {
             </label>
             <input
               type="text"
-              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-gray-900"
-              placeholder=""
+              value={circuitId}
+              onChange={(e) => {
+                setCircuitId(e.target.value);
+              }}
+              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-gray-600"
             />
           </div>
           {/* Company */}
@@ -98,8 +198,11 @@ export default function () {
             </label>
             <input
               type="text"
-              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-gray-900"
-              placeholder=""
+              value={company}
+              onChange={(e) => {
+                setCompany(e.target.value);
+              }}
+              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-gray-600"
             />
           </div>
         </div>
@@ -110,8 +213,11 @@ export default function () {
           </label>
           <input
             type="text"
-            className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-gray-900"
-            placeholder=""
+            value={service}
+            onChange={(e) => {
+              setService(e.target.value);
+            }}
+            className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-gray-600"
           />
         </div>
         {/* Description */}
@@ -123,7 +229,11 @@ export default function () {
             rows={4}
             name=""
             id=""
-            className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-gray-900"
+            value={description}
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
+            className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition text-gray-600"
           ></textarea>
           <span className="text-gray-600 text-xs mt-1">
             Your VPS request is sent to the administrator. If approved, your IT
@@ -135,7 +245,7 @@ export default function () {
         {/* Submit button */}
         <button
           type="button"
-          onClick={openVerification}
+          onClick={verifyAndSendMail}
           className="mt-2 inline-block bg-blue-600 text-white font-medium px-4 py-2 rounded hover:bg-blue-700 transition"
         >
           Submit

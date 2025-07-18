@@ -7,10 +7,10 @@ export default async function AdminPage() {
   const cookieStore = cookies();
   const token = (await cookieStore).get("token")?.value;
 
-  const user = token ? verifyToken(token) : null;
+  const user = token ? await verifyToken(token) : null;
 
-  if (!user) {
-    redirect("/login");
+  if (!user || user.role !== "admin") {
+    redirect("/unauthorized");
   }
 
   return <AdminClient />;

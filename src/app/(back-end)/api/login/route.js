@@ -1,10 +1,8 @@
-import { signToken } from "@/lib/auth";
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
-import { NextResponse } from "next/server";
-import { success, z } from "zod";
+"use server";
 
-const prisma = new PrismaClient();
+import { signToken } from "@/lib/auth";
+import { NextResponse } from "next/server";
+import { z } from "zod";
 
 const LoginSchema = z.object({
   username: z.string().email("Please enter a valid email address"),
@@ -17,7 +15,6 @@ export async function POST(req) {
     const result = LoginSchema.safeParse(body);
 
     if (!result.success) {
-      // Transform Zod errors into a more client-friendly format
       const errors = result.error.flatten().fieldErrors;
       const firstError = Object.values(errors)[0]?.[0] || "Invalid input";
 
@@ -29,23 +26,23 @@ export async function POST(req) {
 
     const { username, password } = result.data;
 
-    const user = await prisma.admin.findUnique({ where: { username } });
-    if (!user) {
+    // ✅ Instead of database, check .env variables
+    if (
+      username !== process.env.ADMIN_USERNAME ||
+      password !== process.env.ADMIN_PASSWORD
+    ) {
       return NextResponse.json(
         { error: "Invalid email or password" },
         { status: 401 }
       );
     }
 
-    const valid = await bcrypt.compare(password, user.password);
-    if (!valid) {
-      return NextResponse.json(
-        { error: "Invalid email or password" },
-        { status: 401 }
-      );
-    }
+    // Create token with a generic payload (no DB ID needed)
+    const token = await signToken({
+      admin: true,
+      role: "admin",
+    });
 
-    const token = signToken({ userId: user.id });
     const response = NextResponse.json({ success: true });
 
     response.cookies.set({
