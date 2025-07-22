@@ -7,65 +7,64 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model admin {
-  id       Int    @id @default(autoincrement())
-  username String @db.VarChar(45)
-  password String @db.VarChar(255)
-}
-
-model product {
-  circuit_no Int        @id
-  username   String     @db.VarChar(45)
-  password   String     @db.VarChar(255)
-  otp        String?    @db.VarChar(6)
-  response   response[]
-}
-
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model req_status {
-  id      Int       @id @default(autoincrement())
-  status  String    @db.VarChar(45)
-  request request[]
-}
-
 model request {
-  id                 Int        @id @default(autoincrement())
-  email              String     @db.VarChar(100)
-  name               String     @db.VarChar(50)
-  designation        String     @db.VarChar(50)
-  contact_no         String     @db.VarChar(12)
-  circuit_id         String     @db.VarChar(50)
-  company            String     @db.VarChar(50)
-  service            String     @db.VarChar(50)
-  description        String     @db.Text
-  email_verification String     @db.VarChar(10)
-  date_time          DateTime   @db.DateTime(0)
-  req_status_id      Int
-  req_status         req_status @relation(fields: [req_status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_request_req_status")
-  response           response[]
+  id          Int        @id @default(autoincrement())
+  name        String     @db.VarChar(50)
+  designation String     @db.VarChar(50)
+  contact_no  String     @db.VarChar(12)
+  company     String     @db.VarChar(50)
+  service     String     @db.VarChar(50)
+  description String     @db.Text
+  date_time   DateTime   @db.DateTime(0)
+  circuit_no  String     @db.VarChar(20)
+  user_id     Int
+  status_id   Int
+  status      status     @relation(fields: [status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_request_status1")
+  user        user       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_request_user1")
+  response    response[]
 
-  @@index([req_status_id], map: "fk_request_req_status_idx")
-}
-
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model res_status {
-  id       Int        @id @default(autoincrement())
-  status   String     @db.VarChar(45)
-  response response[]
+  @@index([user_id], map: "fk_request_user1_idx")
+  @@index([status_id], map: "fk_request_status1_idx")
 }
 
 model response {
-  id                 Int        @id @default(autoincrement())
-  product_circuit_no Int
-  used_time          DateTime   @db.DateTime(0)
-  exp_time           DateTime   @db.DateTime(0)
-  res_status_id      Int
-  request_id         Int
-  product            product    @relation(fields: [product_circuit_no], references: [circuit_no], onDelete: NoAction, onUpdate: NoAction, map: "fk_req_history_product1")
-  request            request    @relation(fields: [request_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_response_request1")
-  res_status         res_status @relation(fields: [res_status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_response_res_status1")
+  id           Int            @id @default(autoincrement())
+  used_time    DateTime       @db.DateTime(0)
+  exp_time     DateTime       @db.DateTime(0)
+  username     String?        @db.VarChar(255)
+  password     String?        @db.VarChar(255)
+  request_id   Int
+  status_id    Int
+  request      request        @relation(fields: [request_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_response_request1")
+  status       status         @relation(fields: [status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_response_status1")
+  response_otp response_otp[]
 
-  @@index([product_circuit_no], map: "fk_req_history_product1_idx")
   @@index([request_id], map: "fk_response_request1_idx")
-  @@index([res_status_id], map: "fk_response_res_status1_idx")
+  @@index([status_id], map: "fk_response_status1_idx")
+}
+
+model response_otp {
+  id          Int      @id @default(autoincrement())
+  otp         String   @db.VarChar(6)
+  response_id Int
+  response    response @relation(fields: [response_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_response_otp_response1")
+
+  @@index([response_id], map: "fk_response_otp_response1_idx")
+}
+
+model user {
+  id         Int       @id @default(autoincrement())
+  email      String    @unique(map: "email_UNIQUE") @db.VarChar(100)
+  status     String    @db.VarChar(10)
+  otp        String?   @db.VarChar(6)
+  circuit_id String    @db.VarChar(45)
+  request    request[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model status {
+  id       Int        @id @default(autoincrement())
+  status   String     @unique(map: "status") @db.VarChar(45)
+  request  request[]
+  response response[]
 }

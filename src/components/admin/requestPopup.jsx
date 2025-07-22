@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { useRef } from "react";
 import { AiOutlineCloseSquare } from "react-icons/ai";
 
-export default function RequestPopUp({ toggleComponent }) {
+export default function RequestPopUp({ toggleComponent, request }) {
   const formRef = useRef();
 
   useGSAP(() => {
@@ -53,19 +53,46 @@ export default function RequestPopUp({ toggleComponent }) {
               <span>Personal Details</span>
             </div>
             <div className="flex flex-col gap-4">
-              {['Name', 'Designation', 'Email', 'Contact No'].map((label) => (
-                <div key={label} className="flex flex-col gap-2">
-                  <label htmlFor={label.toLowerCase().replace(' ', '-')} className="text-gray-600">
-                    {label}
-                  </label>
-                  <input
-                    type={label === 'Email' ? 'email' : label === 'Contact No' ? 'tel' : 'text'}
-                    id={label.toLowerCase().replace(' ', '-')}
-                    disabled
-                    className="transition rounded border-[0.5px] border-l-[2px] border-l-blue-600 py-2 px-3 border-blue-100 bg-gray-50 text-gray-700 focus:outline-none cursor-not-allowed"
-                  />
-                </div>
-              ))}
+              <div className="flex flex-col gap-2">
+                <label htmlFor="name" className="text-gray-600">Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  value={request?.name || ""}
+                  disabled
+                  className="transition rounded border-[0.5px] border-l-[2px] border-l-blue-600 py-2 px-3 border-blue-100 bg-gray-50 text-gray-700 focus:outline-none cursor-not-allowed"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="designation" className="text-gray-600">Designation</label>
+                <input
+                  type="text"
+                  id="designation"
+                  value={request?.designation || ""}
+                  disabled
+                  className="transition rounded border-[0.5px] border-l-[2px] border-l-blue-600 py-2 px-3 border-blue-100 bg-gray-50 text-gray-700 focus:outline-none cursor-not-allowed"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="email" className="text-gray-600">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  value={request?.user?.email || ""}
+                  disabled
+                  className="transition rounded border-[0.5px] border-l-[2px] border-l-blue-600 py-2 px-3 border-blue-100 bg-gray-50 text-gray-700 focus:outline-none cursor-not-allowed"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="contact-no" className="text-gray-600">Contact No</label>
+                <input
+                  type="tel"
+                  id="contact-no"
+                  value={request?.contact_no || ""}
+                  disabled
+                  className="transition rounded border-[0.5px] border-l-[2px] border-l-blue-600 py-2 px-3 border-blue-100 bg-gray-50 text-gray-700 focus:outline-none cursor-not-allowed"
+                />
+              </div>
             </div>
           </div>
 
@@ -75,19 +102,36 @@ export default function RequestPopUp({ toggleComponent }) {
               <span>Service Details</span>
             </div>
             <div className="flex flex-col gap-4">
-              {['Circuit ID', 'Company Name', 'Service'].map((label) => (
-                <div key={label} className="flex flex-col gap-2">
-                  <label htmlFor={label.toLowerCase().replace(' ', '-')} className="text-gray-600">
-                    {label}
-                  </label>
-                  <input
-                    type="text"
-                    id={label.toLowerCase().replace(' ', '-')}
-                    disabled
-                    className="transition rounded border-[0.5px] border-l-[2px] border-l-blue-600 py-2 px-3 border-blue-100 bg-gray-50 text-gray-700 focus:outline-none cursor-not-allowed"
-                  />
-                </div>
-              ))}
+              <div className="flex flex-col gap-2">
+                <label htmlFor="circuit-id" className="text-gray-600">Circuit ID</label>
+                <input
+                  type="text"
+                  id="circuit-id"
+                  value={request?.circuit_no || ""}
+                  disabled
+                  className="transition rounded border-[0.5px] border-l-[2px] border-l-blue-600 py-2 px-3 border-blue-100 bg-gray-50 text-gray-700 focus:outline-none cursor-not-allowed"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="company-name" className="text-gray-600">Company Name</label>
+                <input
+                  type="text"
+                  id="company-name"
+                  value={request?.company || ""}
+                  disabled
+                  className="transition rounded border-[0.5px] border-l-[2px] border-l-blue-600 py-2 px-3 border-blue-100 bg-gray-50 text-gray-700 focus:outline-none cursor-not-allowed"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="service" className="text-gray-600">Service</label>
+                <input
+                  type="text"
+                  id="service"
+                  value={request?.service || ""}
+                  disabled
+                  className="transition rounded border-[0.5px] border-l-[2px] border-l-blue-600 py-2 px-3 border-blue-100 bg-gray-50 text-gray-700 focus:outline-none cursor-not-allowed"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -97,6 +141,7 @@ export default function RequestPopUp({ toggleComponent }) {
           <textarea
             id="description"
             rows={6}
+            value={request?.description || ""}
             disabled
             className="transition rounded border-[0.5px] border-l-[2px] border-l-blue-600 py-2 px-3 border-blue-100 bg-gray-50 text-gray-700 focus:outline-none cursor-not-allowed resize-none overflow-y-auto"
             style={{ minHeight: '150px' }}

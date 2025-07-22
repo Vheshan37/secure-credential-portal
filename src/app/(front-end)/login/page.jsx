@@ -2,15 +2,15 @@
 
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
-import Admin from "../admin/page";
-import Link from "next/link";
-import { useActionState, useState } from "react";
-import { login } from "@/actions/auth";
+import { useState } from "react";
 import GuestLogin from "@/components/guestLogin";
+import Swal from "sweetalert2";
 
 export default function Login() {
-  const [state, action, isPending] = useActionState(login, undefined);
   const [isGuestOpen, setIsGuestOpen] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleGuestPopup = () => {
     setIsGuestOpen(!isGuestOpen);
@@ -25,11 +25,71 @@ export default function Login() {
       ease: "power1.inOut",
     });
   }, []);
+
+  // Handle the login process
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    if (!username.trim() || !password.trim()) {
+      await Swal.fire({
+        icon: "warning",
+        title: "Missing Information",
+        text: "Please enter both username and password",
+        confirmButtonColor: "#3085d6",
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+        credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        await Swal.fire({
+          icon: "success",
+          title: "Login Successful",
+          text: "Redirecting to admin dashboard...",
+          confirmButtonColor: "#3085d6",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        window.location.href = "/admin";
+      } else {
+        await Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: data.error,
+          confirmButtonColor: "#3085d6",
+        });
+      }
+    } catch (error) {
+      await Swal.fire({
+        icon: "error",
+        title: "Network Error",
+        text: "Failed to connect to the server",
+        confirmButtonColor: "#3085d6",
+      });
+      console.error("Login error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="h-screen w-screen bg-blue-50 relative overflow-hidden flex justify-center items-center">
         {/* Guest login popup */}
-        {isGuestOpen && <GuestLogin onClose={toggleGuestPopup}/>}
+        {isGuestOpen && <GuestLogin onClose={toggleGuestPopup} />}
         {/* Guest login popup */}
 
         <img
@@ -43,7 +103,7 @@ export default function Login() {
 
         {/* Glassmorphic form container */}
         <form
-          action={action}
+          onSubmit={handleSubmit}
           className="relative z-10 w-full max-w-sm p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/40 shadow-lg"
         >
           <h1 className="text-2xl font-bold text-center text-green-600 mb-4">
@@ -65,6 +125,8 @@ export default function Login() {
             <input
               id="username"
               type="email"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               placeholder="johndoe@gmail.com"
               className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
             />
@@ -80,6 +142,8 @@ export default function Login() {
             <input
               id="password"
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="********"
               className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
             />
@@ -113,13 +177,42 @@ export default function Login() {
               type="button"
               className="w-full border border-blue-500 text-blue-500 py-2 rounded-lg hover:bg-blue-700 hover:border-blue-700 hover:text-white cursor-pointer"
             >
-              Login as a guest
+              Login as a User
             </button>
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700  cursor-pointer"
+              disabled={isLoading}
+              className={`w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 cursor-pointer flex justify-center items-center ${
+                isLoading ? "opacity-75" : ""
+              }`}
             >
-              Login
+              {isLoading ? (
+                <>
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Processing...
+                </>
+              ) : (
+                "Login as Admin"
+              )}
             </button>
           </div>
         </form>

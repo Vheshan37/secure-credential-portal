@@ -1,7 +1,38 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Request from "./request";
 import ResponseForm from "./responseForm";
 
-export default function Content({requestToggler, historyToggler}) {
+export default function Content({ requestToggler, historyToggler }) {
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+
+  const handleSelectRequest = (req) => {
+    setSelectedRequest(req);
+  };
+
+  const fetchRequests = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/admin/getRequests");
+      const data = await response.json();
+      if (data.success) {
+        setRequests(data.requests);
+      } else {
+        setRequests([]);
+      }
+    } catch (error) {
+      setRequests([]);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchRequests();
+  }, []);
+
   return (
     <div className="p-4 h-full w-full flex flex-col overflow-hidden">
       {/* Top */}
@@ -17,13 +48,24 @@ export default function Content({requestToggler, historyToggler}) {
             Client Requests
           </div>
           <div className="my-2 h-full gap-4 flex flex-col overflow-y-auto overflow-x-hidden">
-            {/* Request Component */}
-            <Request className="shadow-md" radioName="requestGroup" requestToggler={requestToggler} historyToggler={historyToggler}/>
-            <Request className="shadow-md" radioName="requestGroup" requestToggler={requestToggler} historyToggler={historyToggler}/>
-            <Request className="shadow-md" radioName="requestGroup" requestToggler={requestToggler} historyToggler={historyToggler}/>
-            <Request className="shadow-md" radioName="requestGroup" requestToggler={requestToggler} historyToggler={historyToggler}/>
-            <Request className="shadow-md" radioName="requestGroup" requestToggler={requestToggler} historyToggler={historyToggler}/>
-            <Request className="shadow-md" radioName="requestGroup" requestToggler={requestToggler} historyToggler={historyToggler}/>
+            {loading ? (
+              <div className="text-gray-500">Loading...</div>
+            ) : requests.length === 0 ? (
+              <div className="text-gray-500">No pending requests.</div>
+            ) : (
+              requests.map((req) => (
+                <Request
+                  key={req.id}
+                  request={req}
+                  className="shadow-md"
+                  radioName="requestGroup"
+                  requestToggler={() => requestToggler(req)}
+                  historyToggler={() => historyToggler(req.user.email)}
+                  isSelected={selectedRequest?.id === req.id}
+                  onSelect={handleSelectRequest}
+                />
+              ))
+            )}
           </div>
         </div>
         <div className="w-1/3 border border-gray-300 rounded shadow-md p-4 flex flex-col">
@@ -31,7 +73,10 @@ export default function Content({requestToggler, historyToggler}) {
             Send Response
           </div>
           <div className="my-2 h-full overflow-y-auto overflow-x-hidden">
-            <ResponseForm/>
+            <ResponseForm
+              request={selectedRequest}
+              onResponseSubmitted={fetchRequests}
+            />
           </div>
         </div>
       </div>
