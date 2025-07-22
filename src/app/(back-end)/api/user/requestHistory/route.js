@@ -35,7 +35,7 @@ export async function GET(req) {
 
     return NextResponse.json({
       success: true,
-      reqests: user.request,
+      requests: user.request,
     });
   } catch (error) {
     console.log("Error: " + error);

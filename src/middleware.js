@@ -7,6 +7,7 @@ export async function middleware(req) {
   if (
     pathname.startsWith("/api/login") ||
     pathname.startsWith("/api/guestLogin") ||
+    pathname.startsWith("/api/verifyOTP") ||
     pathname === "/login"
   ) {
     return NextResponse.next();

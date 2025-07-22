@@ -4,11 +4,13 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { useState } from "react";
 import GuestLogin from "@/components/guestLogin";
+import Swal from "sweetalert2";
 
 export default function Login() {
   const [isGuestOpen, setIsGuestOpen] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleGuestPopup = () => {
     setIsGuestOpen(!isGuestOpen);
@@ -27,27 +29,59 @@ export default function Login() {
   // Handle the login process
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     if (!username.trim() || !password.trim()) {
-      alert("Please enter both username and password");
+      await Swal.fire({
+        icon: "warning",
+        title: "Missing Information",
+        text: "Please enter both username and password",
+        confirmButtonColor: "#3085d6",
+      });
+      setIsLoading(false);
       return;
     }
 
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-      credentials:"include"
-    });
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+        credentials: "include",
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok) {
-      window.location.href = "/admin";
-    } else {
-      alert(data.error);
+      if (res.ok) {
+        await Swal.fire({
+          icon: "success",
+          title: "Login Successful",
+          text: "Redirecting to admin dashboard...",
+          confirmButtonColor: "#3085d6",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        window.location.href = "/admin";
+      } else {
+        await Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: data.error,
+          confirmButtonColor: "#3085d6",
+        });
+      }
+    } catch (error) {
+      await Swal.fire({
+        icon: "error",
+        title: "Network Error",
+        text: "Failed to connect to the server",
+        confirmButtonColor: "#3085d6",
+      });
+      console.error("Login error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -147,9 +181,38 @@ export default function Login() {
             </button>
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700  cursor-pointer"
+              disabled={isLoading}
+              className={`w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 cursor-pointer flex justify-center items-center ${
+                isLoading ? "opacity-75" : ""
+              }`}
             >
-              Login as a Admin
+              {isLoading ? (
+                <>
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Processing...
+                </>
+              ) : (
+                "Login as Admin"
+              )}
             </button>
           </div>
         </form>

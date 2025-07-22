@@ -16,6 +16,7 @@ model request {
   service     String     @db.VarChar(50)
   description String     @db.Text
   date_time   DateTime   @db.DateTime(0)
+  circuit_no  String     @db.VarChar(20)
   user_id     Int
   status_id   Int
   status      status     @relation(fields: [status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_request_status1")
@@ -30,8 +31,8 @@ model response {
   id           Int            @id @default(autoincrement())
   used_time    DateTime       @db.DateTime(0)
   exp_time     DateTime       @db.DateTime(0)
-  username     String         @db.VarChar(50)
-  password     String         @db.VarChar(255)
+  username     String?        @db.VarChar(255)
+  password     String?        @db.VarChar(255)
   request_id   Int
   status_id    Int
   request      request        @relation(fields: [request_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_response_request1")
@@ -63,7 +64,7 @@ model user {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model status {
   id       Int        @id @default(autoincrement())
-  status   String     @db.VarChar(45)
+  status   String     @unique(map: "status") @db.VarChar(45)
   request  request[]
   response response[]
 }

@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export async function POST(req) {
   try {
-    const { id, name, designation, contact, company, service, description } =
+    const { id, name, designation, contact, company, service, description, circuitId } =
       await req.json();
 
     if (
@@ -17,7 +17,8 @@ export async function POST(req) {
       !contact ||
       !company ||
       !service ||
-      !description
+      !description ||
+      !circuitId
     ) {
       return NextResponse.json(
         { error: "All fields are required" },
@@ -61,6 +62,7 @@ export async function POST(req) {
         service,
         description,
         date_time: localTime,
+        circuit_no: circuitId,
         status_id: pendingStatus.id,
         user_id: parseInt(id),
       },
