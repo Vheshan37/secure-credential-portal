@@ -87,30 +87,23 @@ export default function Login() {
 
   return (
     <>
-      <div className="h-screen w-screen bg-blue-50 relative overflow-hidden flex justify-center items-center">
+      <div className="h-screen w-screen bg-gradient-to-b from-blue-900 to-green-900 relative overflow-hidden flex justify-center items-center">
         {/* Guest login popup */}
         {isGuestOpen && <GuestLogin onClose={toggleGuestPopup} />}
         {/* Guest login popup */}
-
-        <img
-          src="/images/background.png"
-          alt="Image"
-          className="w-full h-full absolute object-contain -z-0"
-          id="img"
-        />
 
         {/* Login form */}
 
         {/* Glassmorphic form container */}
         <form
           onSubmit={handleSubmit}
-          className="relative z-10 w-full max-w-sm p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/40 shadow-lg"
+          className="relative w-1/2 z-10 max-w-sm p-6 rounded-2xl bg-white/5 backdrop-blur-sm  shadow-lg"
         >
           <h1 className="text-2xl font-bold text-center text-green-600 mb-4">
             Secure Credential Portal
           </h1>
 
-          <div className="bg-white border-l-[1.5px] border-blue-600 rounded-lg p-3 text-sm text-gray-800 mb-4">
+          <div className="bg-white/20 border-l-[1.5px] border-blue-600 rounded-lg p-3 text-sm text-slate-300 mb-4">
             Security Notice: This system contains sensitive information. All
             activities are logged and monitored.
           </div>
@@ -118,7 +111,7 @@ export default function Login() {
           <div className="mb-4">
             <label
               htmlFor="username"
-              className="block mb-1 text-gray-900 font-medium"
+              className="block mb-1 text-slate-300 font-medium"
             >
               Username
             </label>
@@ -128,14 +121,14 @@ export default function Login() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="johndoe@gmail.com"
-              className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
+              className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer text-slate-300"
             />
           </div>
 
           <div className="mb-4">
             <label
               htmlFor="password"
-              className="block mb-1 text-gray-900 font-medium"
+              className="block mb-1 text-slate-300 font-medium"
             >
               Password
             </label>
@@ -145,27 +138,27 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="********"
-              className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
+              className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer text-slate-300"
             />
           </div>
 
-          <p className="text-xs text-gray-900">
+          <p className="text-xs text-slate-300">
             By accessing this system, you agree to comply with all company
             policies including:
           </p>
           <ul className="list-disc list-inside mt-1 space-y-1 text-xs mb-4 px-4">
             <li>
-              <a href="#" className="text-gray-600 underline">
+              <a href="#" className="text-slate-400 underline">
                 Acceptable Use Policy
               </a>
             </li>
             <li>
-              <a href="#" className="text-gray-600 underline">
+              <a href="#" className="text-slate-400 underline">
                 Information Security Policy
               </a>
             </li>
             <li>
-              <a href="#" className="text-gray-600 underline">
+              <a href="#" className="text-slate-400 underline">
                 Data Protection Regulations
               </a>
             </li>
@@ -216,6 +209,13 @@ export default function Login() {
             </button>
           </div>
         </form>
+
+        <img
+          src="/images/background.png"
+          alt="Image"
+          className="w-1/2 h-full object-contain -z-0"
+          id="img"
+        />
       </div>
     </>
   );

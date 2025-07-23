@@ -109,79 +109,82 @@ export default function GuestLogin({ onClose }) {
         <form
           onSubmit={handleSubmit}
           ref={formRef}
-          className="bg-blue-50 rounded border border-gray-300 px-2 pt-2 pb-4 min-w-[350px]"
+          className="bg-white/10 backdrop-blur-lg  shadow-lg rounded px-2 pt-2 pb-4 min-w-[350px]"
         >
-          <div className="text-green-600 flex justify-between items-center border-b border-gray-300 pb-2 mb-4">
+          <div className="text-slate-300 flex justify-between items-center pb-2 mb-4">
             <span className="font-semibold text-lg">Login as a User</span>
             <AiOutlineCloseSquare
               onClick={handleClose}
               size={24}
               className="cursor-pointer"
+              color="white"
             />
-          </div>
-          <div className="flex flex-col mb-2">
-            <label htmlFor="" className="block mb-1 text-gray-600">
-              Email
-            </label>
-            <input
-              type="email"
-              placeholder="johndoe@gmail.com"
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-text"
-            />
-          </div>
-          <div className="flex flex-col mb-4">
-            <label htmlFor="" className="block mb-1 text-gray-600">
-              Circuit No
-            </label>
-            <input
-              type="text"
-              placeholder="E10002345"
-              onChange={(e) => setCircuitId(e.target.value)}
-              className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
-          <div className="mb-2 flex justify-start">
-            <span className="text-sm text-gray-400 ps-1 pe-4 text-left">
-              Your IP and email are used only for session authentication
-            </span>
           </div>
           <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={`w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 cursor-pointer flex justify-center items-center ${
-                isLoading ? "opacity-75" : ""
-              }`}
-            >
-              {isLoading ? (
-                <>
-                  <svg
-                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Processing...
-                </>
-              ) : (
-                "Login as a User"
-              )}
-            </button>
+            <div className="flex flex-col mb-2">
+              <label htmlFor="" className="block mb-1 text-slate-300">
+                Email
+              </label>
+              <input
+                type="email"
+                placeholder="johndoe@gmail.com"
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full p-2 rounded-md bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-text text-slate-200"
+              />
+            </div>
+            <div className="flex flex-col mb-4">
+              <label htmlFor="" className="block mb-1 text-slate-300">
+                Circuit No
+              </label>
+              <input
+                type="text"
+                placeholder="E10002345"
+                onChange={(e) => setCircuitId(e.target.value)}
+                className="w-full p-2 rounded-md bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400 text-slate-200"
+              />
+            </div>
+            <div className="mb-2 flex justify-start">
+              <span className="text-sm text-gray-800 ps-1 pe-4 text-left">
+                Your IP and email are used only for session authentication
+              </span>
+            </div>
+            <div>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className={`w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 cursor-pointer flex justify-center items-center ${
+                  isLoading ? "opacity-75" : ""
+                }`}
+              >
+                {isLoading ? (
+                  <>
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Processing...
+                  </>
+                ) : (
+                  "Login as a User"
+                )}
+              </button>
+            </div>
           </div>
         </form>
       )}
