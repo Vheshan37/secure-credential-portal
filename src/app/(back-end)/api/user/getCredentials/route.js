@@ -12,7 +12,8 @@ const setSessionCookies = (response, email, credentials) => {
     name: "otp_verified",
     value: "true",
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    // secure: process.env.NODE_ENV === "production",
+    secure: false,
     sameSite: "strict",
     path: "/",
     maxAge: 6 * 60 * 60, // 6 hours
@@ -23,7 +24,8 @@ const setSessionCookies = (response, email, credentials) => {
     name: "user_session",
     value: JSON.stringify({ email, ...credentials }),
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    // secure: process.env.NODE_ENV === "production",
+    secure: false,
     sameSite: "strict",
     path: "/",
     maxAge: 6 * 60 * 60, // 6 hours
