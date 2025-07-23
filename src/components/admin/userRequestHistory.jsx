@@ -64,7 +64,7 @@ export default function RequestHistory({ toggleComponent, email }) {
         return <LiaHourglassEndSolid className="text-orange-400" />;
       case "rejected":
         return <MdBlock className="text-red-400" />;
-      case "approved":
+      case "completed":
         return <MdDoneAll className="text-green-400" />;
       default:
         return <LiaHourglassEndSolid className="text-orange-400" />;
