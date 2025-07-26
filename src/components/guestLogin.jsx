@@ -120,7 +120,7 @@ export default function GuestLogin({ onClose }) {
               color="white"
             />
           </div>
-          <div>
+          <div className="px-2">
             <div className="flex flex-col mb-2">
               <label htmlFor="" className="block mb-1 text-slate-300">
                 Email

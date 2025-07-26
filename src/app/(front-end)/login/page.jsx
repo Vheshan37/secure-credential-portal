@@ -121,7 +121,7 @@ export default function Login() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="johndoe@gmail.com"
-              className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer text-slate-300"
+              className="w-full p-2 rounded-md bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer text-slate-300"
             />
           </div>
 
@@ -138,7 +138,7 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="********"
-              className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer text-slate-300"
+              className="w-full p-2 rounded-md bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer text-slate-300"
             />
           </div>
 
@@ -146,7 +146,7 @@ export default function Login() {
             By accessing this system, you agree to comply with all company
             policies including:
           </p>
-          <ul className="list-disc list-inside mt-1 space-y-1 text-xs mb-4 px-4">
+          <ul className="list-disc list-inside mt-1 space-y-1 text-xs mb-4 px-4 text-slate-400">
             <li>
               <a href="#" className="text-slate-400 underline">
                 Acceptable Use Policy
