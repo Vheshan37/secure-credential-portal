@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import EmailVerification from "./emailVerification";
+// import EmailVerification from "./emailVerification";
 import Swalert from "sweetalert2";
 
 export default function ({ user, onRequestSuccess }) {
-  const [isVerificationOpen, setIsVerificationOpen] = useState(false);
+  // const [isVerificationOpen, setIsVerificationOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isEmailSending, setIsEmailSending] = useState(false);
+  // const [isEmailSending, setIsEmailSending] = useState(false);
 
   const [name, setName] = useState("");
   const [designation, setDesignation] = useState("");
@@ -17,13 +17,13 @@ export default function ({ user, onRequestSuccess }) {
   const [service, setService] = useState("");
   const [description, setDescription] = useState("");
 
-  const openVerification = () => {
-    setIsVerificationOpen(true);
-  };
+  // const openVerification = () => {
+  //   setIsVerificationOpen(true);
+  // };
 
-  const closeVerification = () => {
-    setIsVerificationOpen(false);
-  };
+  // const closeVerification = () => {
+  //   setIsVerificationOpen(false);
+  // };
 
   const isInputsEntered = () => {
     const errors = [];
@@ -90,7 +90,7 @@ export default function ({ user, onRequestSuccess }) {
             confirmButtonColor: "#3085d6",
           });
           clearInputs();
-          closeVerification();
+          // closeVerification();
           if (onRequestSuccess) {
             onRequestSuccess();
           }
@@ -123,59 +123,59 @@ export default function ({ user, onRequestSuccess }) {
     }
   };
 
-  const verifyAndSendMail = async () => {
-    if (isInputsEntered()) {
-      setIsEmailSending(true);
-      try {
-        const response = await fetch(
-          `/api/user/request/sendEmail?id=${encodeURIComponent(user.userId)}`
-        );
+  // const verifyAndSendMail = async () => {
+  //   if (isInputsEntered()) {
+  //     setIsEmailSending(true);
+  //     try {
+  //       const response = await fetch(
+  //         `/api/user/request/sendEmail?id=${encodeURIComponent(user.userId)}`
+  //       );
 
-        const responseData = await response.json();
+  //       const responseData = await response.json();
 
-        if (response.ok) {
-          if (responseData.success) {
-            openVerification();
-          } else {
-            await Swalert.fire({
-              icon: "error",
-              title: "Error",
-              text: responseData.error,
-              confirmButtonColor: "#d33",
-            });
-          }
-        } else {
-          await Swalert.fire({
-            icon: "error",
-            title: "Error",
-            text: responseData.error,
-            confirmButtonColor: "#d33",
-          });
-        }
-      } catch (error) {
-        console.error("Email sending error:", error);
-        await Swalert.fire({
-          icon: "error",
-          title: "Error",
-          text: "Failed to send verification email",
-          confirmButtonColor: "#d33",
-        });
-      } finally {
-        setIsEmailSending(false);
-      }
-    }
-  };
+  //       if (response.ok) {
+  //         if (responseData.success) {
+  //           openVerification();
+  //         } else {
+  //           await Swalert.fire({
+  //             icon: "error",
+  //             title: "Error",
+  //             text: responseData.error,
+  //             confirmButtonColor: "#d33",
+  //           });
+  //         }
+  //       } else {
+  //         await Swalert.fire({
+  //           icon: "error",
+  //           title: "Error",
+  //           text: responseData.error,
+  //           confirmButtonColor: "#d33",
+  //         });
+  //       }
+  //     } catch (error) {
+  //       console.error("Email sending error:", error);
+  //       await Swalert.fire({
+  //         icon: "error",
+  //         title: "Error",
+  //         text: "Failed to send verification email",
+  //         confirmButtonColor: "#d33",
+  //       });
+  //     } finally {
+  //       setIsEmailSending(false);
+  //     }
+  //   }
+  // };
 
   return (
     <>
-      {isVerificationOpen && (
+      {/* {isVerificationOpen && (
         <EmailVerification
           onClose={closeVerification}
           onAction={submitRequest}
           user={user}
           isLoading={isLoading}
         />
-      )}
+      )} */}
       <form className="flex gap-4 flex-col">
         <span className="text-gray-700 font-semibold border-b border-gray-300 pb-2">
           Personal Details
@@ -310,13 +310,13 @@ export default function ({ user, onRequestSuccess }) {
         {/* Submit button */}
         <button
           type="button"
-          onClick={verifyAndSendMail}
-          disabled={isEmailSending}
+          onClick={submitRequest}
+          disabled={isLoading}
           className={`mt-2 bg-blue-600 text-white font-medium px-4 py-2 rounded hover:bg-blue-700 transition flex items-center justify-center ${
-            isEmailSending ? "opacity-75" : ""
+            isLoading ? "opacity-75" : ""
           }`}
         >
-          {isEmailSending ? (
+          {isLoading ? (
             <>
               <svg
                 className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
@@ -338,7 +338,7 @@ export default function ({ user, onRequestSuccess }) {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              Sending...
+              Submitting...
             </>
           ) : (
             "Submit"
