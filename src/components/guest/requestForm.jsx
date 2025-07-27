@@ -1,13 +1,10 @@
 "use client";
 
 import { useState } from "react";
-// import EmailVerification from "./emailVerification";
 import Swalert from "sweetalert2";
 
 export default function ({ user, onRequestSuccess }) {
-  // const [isVerificationOpen, setIsVerificationOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // const [isEmailSending, setIsEmailSending] = useState(false);
 
   const [name, setName] = useState("");
   const [designation, setDesignation] = useState("");
@@ -16,14 +13,6 @@ export default function ({ user, onRequestSuccess }) {
   const [company, setCompany] = useState("");
   const [service, setService] = useState("");
   const [description, setDescription] = useState("");
-
-  // const openVerification = () => {
-  //   setIsVerificationOpen(true);
-  // };
-
-  // const closeVerification = () => {
-  //   setIsVerificationOpen(false);
-  // };
 
   const isInputsEntered = () => {
     const errors = [];
@@ -62,6 +51,8 @@ export default function ({ user, onRequestSuccess }) {
   };
 
   const submitRequest = async () => {
+    if (!isInputsEntered()) return;
+
     setIsLoading(true);
     try {
       const res = await fetch("/api/user/request/sendRequest", {
@@ -123,59 +114,8 @@ export default function ({ user, onRequestSuccess }) {
     }
   };
 
-  // const verifyAndSendMail = async () => {
-  //   if (isInputsEntered()) {
-  //     setIsEmailSending(true);
-  //     try {
-  //       const response = await fetch(
-  //         `/api/user/request/sendEmail?id=${encodeURIComponent(user.userId)}`
-  //       );
-
-  //       const responseData = await response.json();
-
-  //       if (response.ok) {
-  //         if (responseData.success) {
-  //           openVerification();
-  //         } else {
-  //           await Swalert.fire({
-  //             icon: "error",
-  //             title: "Error",
-  //             text: responseData.error,
-  //             confirmButtonColor: "#d33",
-  //           });
-  //         }
-  //       } else {
-  //         await Swalert.fire({
-  //           icon: "error",
-  //           title: "Error",
-  //           text: responseData.error,
-  //           confirmButtonColor: "#d33",
-  //         });
-  //       }
-  //     } catch (error) {
-  //       console.error("Email sending error:", error);
-  //       await Swalert.fire({
-  //         icon: "error",
-  //         title: "Error",
-  //         text: "Failed to send verification email",
-  //         confirmButtonColor: "#d33",
-  //       });
-  //     } finally {
-  //       setIsEmailSending(false);
-  //     }
-  //   }
-  // };
-
   return (
     <>
-      {/* {isVerificationOpen && (
-        <EmailVerification
-          onClose={closeVerification}
-          onAction={submitRequest}
-          user={user}
-          isLoading={isLoading}
-        />
-      )} */}
       <form className="flex gap-4 flex-col">
         <span className="text-gray-700 font-semibold border-b border-gray-300 pb-2">
           Personal Details
