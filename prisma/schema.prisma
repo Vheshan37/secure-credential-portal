@@ -52,6 +52,7 @@ model response_otp {
   @@index([response_id], map: "fk_response_otp_response1_idx")
 }
 
+// User table as a prisma model
 model user {
   id         Int       @id @default(autoincrement())
   email      String    @unique(map: "email_UNIQUE") @db.VarChar(100)
